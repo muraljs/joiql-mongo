@@ -90,7 +90,7 @@ exports.model = (singular, _attrs) => {
     const req = ctx.req.mutation && ctx.req.mutation[updateMethod]
     if (!req) return next()
     return db[plural]
-      .update({ _id: req.args._id }, req.args)
+      .save(req.args)
       .then((doc) => { ctx.res[updateMethod] = doc })
       .then(next)
   })

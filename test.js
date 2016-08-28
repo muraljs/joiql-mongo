@@ -36,8 +36,12 @@ describe('JoiQL Mongo', () => {
         mutation {
           updateUser(_id: "${doc._id}" name: "Paul") { name }
         }
-      `).then(() => db.users.findOne({ _id: doc._id }))
-        .then((doc) => doc.name.should.equal('Paul'))))
+      `)
+      .then((res) => {
+        res.data.updateUser.name.should.equal('Paul')
+        return db.users.findOne({ _id: doc._id })
+      })
+      .then((doc) => doc.name.should.equal('Paul'))))
 
   it('converts a schema to a delete operation', () =>
     db.users.save({ name: 'Craig' }).then((doc) =>
