@@ -29,7 +29,7 @@ const _id = () =>
   objectid()
     .description('Unique ID')
     .meta((is) => ({
-      'create read list': is.forbidden(),
+      'create': is.forbidden(),
       'update delete': is.required()
     }))
 
