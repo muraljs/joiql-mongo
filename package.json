@@ -1,0 +1,34 @@
+{
+  "name": "joiql-mongo",
+  "version": "1.0.0",
+  "description": "Data modeling library using JoiQL and Mongo",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -r should"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craigspaeth/joiql-mongo.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/craigspaeth/joiql-mongo/issues"
+  },
+  "homepage": "https://github.com/craigspaeth/joiql-mongo#readme",
+  "dependencies": {
+    "graphql": "^0.7.0",
+    "joi": "^9.0.4",
+    "joiql": "0.0.6",
+    "lodash": "^4.15.0",
+    "pluralize": "^3.0.0",
+    "promised-mongo": "^1.2.0"
+  },
+  "devDependencies": {
+    "express": "^4.14.0",
+    "express-graphql": "^0.5.4",
+    "mocha": "^3.0.2",
+    "should": "^11.1.0",
+    "sinon": "^1.17.5"
+  }
+}
