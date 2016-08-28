@@ -102,6 +102,31 @@ const api = models(tweet, user)
 app.use('/graphql', graphqlHTTP({ schema: api.schema }))
 ````
 
+### query(name, schema, middleware)
+
+Convenience utility for adding add-hoc GraphQL queries.
+
+````javascript
+const { query, string, array } = require('joiql-mongo')
+query('tags', array().items(string()), async (ctx, next) => {
+  ctx.res.tags = await Tags.find()
+})
+````
+
+### mutation(name, schema, middleware)
+
+Convenience utility for adding add-hoc GraphQL mutations.
+
+````javascript
+const { mutation, string, array } = require('joiql-mongo')
+mutation('emailBlast', string().meta({ args: {
+  emails: array().items(string().email())
+} }), async (ctx, next) => {
+  await sendEmail()
+  ctx.res.emailBlast = 'success'
+  next()
+})
+````
 ## Contributing
 
 Please fork the project and submit a pull request with tests. Install node modules `npm install` and run tests with `npm test`.

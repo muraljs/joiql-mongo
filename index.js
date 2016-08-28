@@ -45,7 +45,7 @@ const toArgs = (attrs, method) =>
 
 // Connect to Mongo database
 exports.connect = (uri, collections) => {
-  db = mongo(uri, collections)
+  db = module.exports.db = mongo(uri, collections)
   return db
 }
 
