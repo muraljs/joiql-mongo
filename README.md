@@ -66,7 +66,7 @@ As you can see above, JoiQL Mongo exports Joi types for your convenience. There 
 
 ### model.on(method, middlewareFunction)
 
-Hook into CRUDL operations of a model through [JoiQL middleware](https://github.com/craigspaeth/joiql). JoiQL Mongo will automatically add persistence middleware (e.g. `db.save` or `db.find` operations) to the bottom of the stack. This way you can hook into before and after persistence operations by running code before or ater control flows upstream using `await next()`.
+Hook into CRUDL operations of a model through [JoiQL middleware](https://github.com/craigspaeth/joiql). JoiQL Mongo will automatically add persistence middleware (e.g. `db.save` or `db.find` operations) to the bottom of the stack. This way you can hook into before and after persistence operations by running code before or after control flows upstream using `await next()`.
 
 _For those faimiliar with Rails, you can think of these as the equivalent of [ActiveRecord callbacks](http://api.rubyonrails.org/classes/ActiveRecord/Callbacks.html)._
 
@@ -89,6 +89,56 @@ model('user', {
     'create update': is.required().min(2)
   }))
 })
+````
+
+### model.create(attrs) => Promise
+
+Convenience method for running a "create" operation that leverages validation and middleware.
+
+````javascript
+user.create({ name: 'Foo' })
+  .catch(() => console.log('validation failed'))
+  .then(() => console.log('successfully created user'))
+````
+
+### model.find(attrs) => Promise
+
+Convenience method for running a "read" operation that leverages validation and middleware.
+
+````javascript
+user.find({ name: 'Foo' })
+  .catch(() => console.log('validation failed'))
+  .then(() => console.log('successfully created user'))
+````
+
+### model.update(attrs) => Promise
+
+Convenience method for running an "update" operation that leverages validation and middleware.
+
+````javascript
+user.update({ _id: "543d3fb87261692e99a80500", name: 'Foo' })
+  .catch(() => console.log('validation failed'))
+  .then(() => console.log('successfully created user'))
+````
+
+### model.destroy(attrs) => Promise
+
+Convenience method for running a "delete" operation that leverages validation and middleware.
+
+````javascript
+user.destroy({ _id: "543d3fb87261692e99a80500", name: 'Foo' })
+  .catch(() => console.log('validation failed'))
+  .then(() => console.log('successfully created user'))
+````
+
+### model.where(attrs) => Promise
+
+Convenience method for running a "list" operation that leverages validation and middleware.
+
+````javascript
+user.where({ name: 'Foo' })
+  .catch(() => console.log('validation failed'))
+  .then(() => console.log('successfully created user'))
 ````
 
 ### models(...models)
@@ -127,6 +177,7 @@ mutation('emailBlast', string().meta({ args: {
   next()
 })
 ````
+
 ## Contributing
 
 Please fork the project and submit a pull request with tests. Install node modules `npm install` and run tests with `npm test`.

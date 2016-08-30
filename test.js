@@ -4,15 +4,18 @@ const { graphql } = require('graphql')
 const sinon = require('sinon')
 
 const db = connect('mongodb://localhost:27017/joiql-mongo')
-const user = model('user', {
-  name: string().meta((is) => ({
-    create: is.required()
-  }))
-})
 
 describe('JoiQL Mongo', () => {
-  beforeEach(() =>
-    db.users.remove())
+  let user
+
+  beforeEach(() => {
+    user = model('user', {
+      name: string().meta((is) => ({
+        create: is.required()
+      }))
+    })
+    return db.users.remove()
+  })
 
   it('converts a schema to a create operation', () =>
     graphql(models(user).schema, `
@@ -63,10 +66,77 @@ describe('JoiQL Mongo', () => {
   it('can run middleware', () => {
     const spy = sinon.spy()
     user.on('create', spy)
-    graphql(models(user).schema, `
+    return graphql(models(user).schema, `
       mutation {
         createUser(name: "Craig") { name }
       }
     `).then(() => spy.called.should.be.ok())
+  })
+
+  context('create convenience method', () => {
+    it('validates', () =>
+      user
+        .create({})
+        .catch((err) => err.message.should.containEql('"name" is required')))
+
+    it('persists', () =>
+      user
+        .create({ name: 'Craig' })
+        .then(() => db.users.findOne())
+        .then((doc) => doc.name.should.equal('Craig')))
+  })
+
+  context('update convenience method', () => {
+    it('validates', () =>
+      user
+        .update({ name: 'Craig' })
+        .catch((err) => err.message.should.containEql('"_id" is required')))
+
+    it('persists', () =>
+      db.users
+        .save({ name: 'Craig' })
+        .then((doc) =>
+          user
+            .update({ _id: doc._id.toString(), name: 'Paul' })
+            .then(() => db.users.findOne())
+            .then((doc) => doc.name.should.equal('Paul'))))
+  })
+
+  context('find convenience method', () => {
+    xit('validates')
+
+    it('retrieves', () =>
+      db.users
+        .save({ name: 'Craig' })
+        .then(() =>
+          user
+            .find()
+            .then((doc) => doc.name.should.equal('Craig'))))
+  })
+
+  context('destroy convenience method', () => {
+    xit('validates')
+
+    it('persists', () =>
+      db.users
+        .save({ name: 'Craig' })
+        .then(() =>
+          user
+            .destroy()
+            .then(() => db.users.find())
+            .then((docs) => docs.length.should.equal(0))))
+  })
+
+  context('where convenience method', () => {
+    xit('validates')
+
+    it('retrieves', () =>
+      db.users
+        .insert([{ name: 'Craig' }, { name: 'Paul' }])
+        .then(() =>
+          user
+            .where({ name: 'Craig' })
+            .then((docs) =>
+              docs.map((d) => d.name).join('').should.equal('Craig'))))
   })
 })

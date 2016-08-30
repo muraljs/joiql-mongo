@@ -9,7 +9,7 @@ const {
   boolean,
   array,
   object
-} = require('./')
+} = require('../')
 connect('mongodb://localhost:27017/joiql-mongo')
 
 const tweet = model('tweet', {
