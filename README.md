@@ -141,17 +141,6 @@ user.where({ name: 'Foo' })
   .then(() => console.log('successfully created user'))
 ````
 
-### models(...models)
-
-Combine a set of models into a [JoiQL](https://github.com/craigspaeth/joiql) instance that exposes a [GraphQL.js](https://github.com/graphql/graphql-js) schema object.
-
-````javascript
-const { models } = require('joiql-mongo')
-//...
-const api = models(tweet, user)
-app.use('/graphql', graphqlHTTP({ schema: api.schema }))
-````
-
 ### query(name, schema, middleware)
 
 Convenience utility for adding add-hoc GraphQL queries.
@@ -176,6 +165,31 @@ mutation('emailBlast', string().meta({ args: {
   ctx.res.emailBlast = 'success'
   next()
 })
+````
+
+### models(...models)
+
+Combine a set of models into a [JoiQL](https://github.com/craigspaeth/joiql) instance that exposes a [GraphQL.js](https://github.com/graphql/graphql-js) schema object.
+
+````javascript
+const { models } = require('joiql-mongo')
+//...
+const api = models(tweet, user)
+app.use('/graphql', graphqlHTTP({ schema: api.schema }))
+````
+
+### graphqlize({ modelName: modelObject })
+
+Convenience utility for converting a hash of model objects into mountable Koa middleware
+
+````javascript
+const { graphqlize } = require('joiql-mongo')
+const models = require('./models')
+const mount = require('koa-mount')
+
+const app = new Koa()
+
+app.use(mount('/graphql', graphqlize(models))))
 ````
 
 ## Contributing

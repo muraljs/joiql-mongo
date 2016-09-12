@@ -3,6 +3,8 @@ const mongo = require('promised-mongo')
 const pluralize = require('pluralize')
 const joiql = require('joiql')
 const compose = require('koa-compose')
+const graphqlHTTP = require('koa-graphql')
+const convert = require('koa-convert')
 const {
   isFunction,
   find,
@@ -10,7 +12,8 @@ const {
   mapValues,
   capitalize,
   merge,
-  pick
+  pick,
+  values
 } = require('lodash')
 
 let db
@@ -213,6 +216,12 @@ exports.models = (...models) => {
   const api = joiql(pick(merge({}, ...models), 'query', 'mutation'))
   models.forEach((model) => model.middleware.forEach(api.use))
   return api
+}
+
+// Combine a hash of models into Koa middleware
+exports.graphqlize = (models) => {
+  const api = mongo.models(...values(models))
+  return convert(graphqlHTTP({ schema: api.schema, graphiql: true }))
 }
 
 // Export Joi types
