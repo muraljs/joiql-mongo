@@ -59,7 +59,7 @@ exports.model = (singular, _attrs) => {
   const mutation = {}
   const middleware = []
   const plural = pluralize(singular)
-  const col = db[plural]
+  const col = () => db[plural]
   const attrs = assign({}, _attrs, { _id: _id() })
   // Create schema
   const createMethod = `create${capitalize(singular)}`
@@ -69,7 +69,7 @@ exports.model = (singular, _attrs) => {
   middleware.push((ctx, next) => {
     const req = ctx.req.mutation && ctx.req.mutation[createMethod]
     if (!req) return next()
-    return col
+    return col()
       .insert(req.args)
       .then(() => { ctx.res[createMethod] = req.args })
       .then(next)
@@ -81,7 +81,7 @@ exports.model = (singular, _attrs) => {
   middleware.push((ctx, next) => {
     const req = ctx.req.query && ctx.req.query[singular]
     if (!req) return next()
-    return col
+    return col()
       .findOne(req.args)
       .then((doc) => { ctx.res[singular] = doc })
       .then(next)
@@ -94,7 +94,7 @@ exports.model = (singular, _attrs) => {
   middleware.push((ctx, next) => {
     const req = ctx.req.mutation && ctx.req.mutation[updateMethod]
     if (!req) return next()
-    return col
+    return col()
       .save(req.args)
       .then((doc) => { ctx.res[updateMethod] = doc })
       .then(next)
@@ -107,7 +107,7 @@ exports.model = (singular, _attrs) => {
   middleware.push((ctx, next) => {
     const req = ctx.req.mutation && ctx.req.mutation[deleteMethod]
     if (!req) return next()
-    return col
+    return col()
       .remove(req.args)
       .then((doc) => { ctx.res[deleteMethod] = null })
       .then(next)
@@ -120,7 +120,7 @@ exports.model = (singular, _attrs) => {
   middleware.push((ctx, next) => {
     const req = ctx.req.query && ctx.req.query[plural]
     if (!req) return next()
-    return col
+    return col()
       .find(req.args)
       .then((docs) => { ctx.res[plural] = docs })
       .then(next)
@@ -220,7 +220,7 @@ exports.models = (...models) => {
 
 // Combine a hash of models into Koa middleware
 exports.graphqlize = (models) => {
-  const api = mongo.models(...values(models))
+  const api = exports.models(...values(models))
   return convert(graphqlHTTP({ schema: api.schema, graphiql: true }))
 }
 
