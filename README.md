@@ -5,7 +5,7 @@ GraphQL and MongoDB modeling library using [JoiQL](https://github.com/craigspaet
 ## Example
 
 ````javascript
-const { connect, model, models, string, date } = require('joiq-mongo')
+const { connect, model, models, string, date } = require('joiql-mongo')
 connect('mongodb://localhost:27017/gluu')
 
 const user = model('user', {
