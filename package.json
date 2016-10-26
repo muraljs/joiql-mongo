@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "joi": "^9.0.4",
-    "joiql": "0.0.8",
+    "joiql": "0.0.9",
     "koa-compose": "^3.1.0",
     "koa-convert": "^1.2.0",
     "koa-graphql": "^0.5.6",
