@@ -1,6 +1,6 @@
 {
   "name": "joiql-mongo",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Data modeling library using JoiQL and Mongo",
   "main": "index.js",
   "scripts": {
