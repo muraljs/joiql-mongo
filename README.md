@@ -77,7 +77,7 @@ user.on('update', async (ctx, next) => {
 })
 ````
 
-### JoiType.meta(decoratorFunction)
+### JoiType.meta(dslFunction)
 
 JoiQL Mongo allows for conditional validation via a [DSL](https://www.wikiwand.com/en/Domain-specific_language) leveraging the [meta](https://github.com/hapijs/joi/blob/v9.0.4/API.md#anymetameta) API in Joi. Pass a function that returns an object describing the conditional validation.
 
